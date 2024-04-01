@@ -1,0 +1,37 @@
+1. Refer DataModels from https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj
+2. To ignore folders/files to push into github, add them to .gitignore file in the root directory. Refer https://mrkandreev.name/snippets/gitignore-generator/#Node
+3. To Push empty folders into github, add .gitkeep file in the folder.
+4. To create new folder using `mkdir` command, use echo "" > name.txt to create a file
+5. Change Module/Type in package.json to "type" : "module" to use ES6 import/export syntax
+6. To Auto Deploy server after any changes at runtime, then use `nodemon` package. Refer https://www.npmjs.com/package/nodemon 
+    - Install nodemon using `npm install nodemon --save-dev` or `npm i -D nodemon`
+7. Make changes scripts/dev : 'nodemon src/index.js' in package.json
+8. Create folders inside src controllers, db, middlewares, models, routes, utils using command
+    - `mkdir controllers,db,middlewares,models,routes,utils`
+9. To make consistant code formate, use Prettier package
+    - Install Prettier using `npm install prettier --save-dev` or `npm i -D prettier`
+    - Create .prettierrc file in the root directory and add the following code
+        ```
+        {
+            "singleQuote": false, // single quote or double quote
+            "bracketSpacing": true, // { foo: bar } or {foo: bar}
+            "tabWidth": 2, // number of spaces for indentation
+            "semi": true, // add semicolon at the end of the line
+            "useTabs": true, // use tabs instead of spaces
+            "trailingComma": "es5", // add trailing comma 
+        }
+        ```
+    - Create .prettierignore file in the root directory and add the following code
+        ```
+        node_modules
+        *.env
+        .env
+        .env.*
+        ```
+    - Add the following code in package.json
+        ```
+        "scripts": {
+            "format": "prettier --write ."
+        }
+        ```
+    - Run `npm run format` to format the code
