@@ -35,3 +35,28 @@
         }
         ```
     - Run `npm run format` to format the code
+10. Mongo DB atlas jayeshhadkejrh:Oko5Zx0Us97C0u27
+11. Add .env file in the root directory and add the following code
+    ```
+    PORT=5000
+    MONGO_URI=mongodb://localhost:27017/eraser
+    ```
+12. Insert constants value into src/constants.js file
+    ```
+    export const DB_NAME = "youtube"
+    ```
+
+13. When connecting to DB (any db) must use try catch block to handle errors and async await to handle promises
+    ```
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false
+        })
+        console.log("MongoDB Connected")
+    } catch (error) {
+        console.log("Error in connecting to DB", error)
+    }
+    ```
