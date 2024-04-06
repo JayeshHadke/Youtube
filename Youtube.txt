@@ -45,18 +45,41 @@
     ```
     export const DB_NAME = "youtube"
     ```
-
+    
 13. When connecting to DB (any db) must use try catch block to handle errors and async await to handle promises
+14. Add db/index.js 
     ```
-    try {
-        await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-            useFindAndModify: false
-        })
-        console.log("MongoDB Connected")
-    } catch (error) {
-        console.log("Error in connecting to DB", error)
+    import mongoose from "mongoose";
+    import { DB_NAME } from "../constants.js";
+
+    const connectDB = async () => {
+        try {
+            const connectionInstance = await mongoose.connect(`${process.env.MONGO_URI}/${DB_NAME}`);
+            console.log(`MongoDB connected: ${connectionInstance.connection.host}`);
+        } catch (error) {
+            console.error(error);
+            process.exit(1);
+        }
     }
+
+    export default connectDB;
     ```
+15. Call connectDB() in src/index.js
+16. Define Express app in src/app.js
+17. On Successfull connection with db with promise, start the server using app.listen
+18. Install cooker-parser package using `npm i cookie-parser` and cores package using `npm i cors`. Please refer https://www.npmjs.com/package/cors and https://www.npmjs.com/package/cookie-parser for more details
+19. Make changes in app.js to handel middlerwares
+    ```
+    import express from "express";
+    import cookieParser from "cookie-parser";
+    import cors from "cors";
+
+    const app = express();
+
+    app.use(express.json());
+    app.use(cookieParser());
+    app.use(cors());
+
+    export default app;
+    ```
+
