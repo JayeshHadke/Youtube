@@ -82,4 +82,6 @@
 
     export default app;
     ```
-
+20. Create Models user,video and import mongooes-aggregate-paginate-v2 package using `npm i mongoose-aggregate-paginate-v2` in video model
+21. Import bcrypt / bcryptjs and jsonwebtoken package using `npm i bcrypt` and `npm i jsonwebtoken` in user model
+22. Create methods in user model to hash password and compare password
