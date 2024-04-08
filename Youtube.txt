@@ -84,4 +84,7 @@
     ```
 20. Create Models user,video and import mongooes-aggregate-paginate-v2 package using `npm i mongoose-aggregate-paginate-v2` in video model
 21. Import bcrypt / bcryptjs and jsonwebtoken package using `npm i bcrypt` and `npm i jsonwebtoken` in user model
-22. Create methods in user model to hash password and compare password
+22. Create methods in user model and create methods to hash password and compare password
+23. Use Multer and Cloudinary to upload images and videos. Check utils/cloudinary.js and middlerwares/multer.middleware.js
+24. Create Utils files like ApiErrors, ApiResponse, asyncHandler
+25. Create a Controller for User and Route for User

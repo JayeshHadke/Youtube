@@ -1,10 +1,10 @@
-let asyncHandler = (fun) => (err, req, res, next) => {
-    Promise.resolve(fun(err, req, res, next)).catch((next) => (next(err)));
-}
+let asyncHandler = (fun) => ((req, res, next) => {
+    Promise.resolve(fun(req, res, next)).catch((next) => (next(err)));
+});
 
 // Without using arrow function
 // let asyncHandler = (fun) => {
-//     (err, req, res, next) => {
+//     return (err, req, res, next) => {
 //         Promise.resolve(fun(err, req, res, next)).catch((next) => (next(err)));
 //     }
 // }

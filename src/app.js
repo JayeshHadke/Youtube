@@ -10,4 +10,7 @@ app.use(express.static('public')); // for serving static files
 
 app.use(cookieParser()); // for parsing cookies and do curd operation on cookies in user browser
 
+import userRouter from './routes/user.routes.js';
+app.use("/api/v1/users", userRouter);
+
 export { app };
