@@ -1,5 +1,5 @@
 let asyncHandler = (fun) => ((req, res, next) => {
-    Promise.resolve(fun(req, res, next)).catch((next) => (next(err)));
+    Promise.resolve(fun(req, res, next)).catch((err) => (next(err)));
 });
 
 // Without using arrow function
