@@ -5,6 +5,17 @@ import { uploadOnCloud } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const registerUser = asyncHandler(async (req, res) => {
+
+    // get user details from frontend
+    // validation - not empty
+    // check if user already exists: username, email
+    // check for images, check for avatar
+    // upload them to cloudinary, avatar
+    // create user object - create entry in db
+    // remove password and refresh token field from response
+    // check for user creation
+    // return res
+
     // get user details from frontend
     const { fullName, email, userName, password } = req.body;
     // validation - not empty
@@ -24,9 +35,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "User already exists");
     }
     // check for images, check for avatar
-    const avatarLocalPath = req.files.avatar ? req.files.avatar[0].path : null;
-    const coverLocalPath = req.files.coverImage ? req.files.coverImage[0].path : null;
-    console.log(avatarLocalPath, req.files);
+    const avatarLocalPath = req.files.avatar ? req.files.avatar[0]?.path : null;
+    const coverLocalPath = req.files.coverImage ? req.files.coverImage[0]?.path : null;
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar is required");
     }
