@@ -61,4 +61,70 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(201).json(new ApiResponse(200, createdUser, "User created successfully"));
 });
 
-export { registerUser };
+const loginUser = asyncHandler(async (req, res) => {
+    // req body -> data
+    // username or email
+    //find the user
+    //password check
+    //access and referesh token
+    //send cookie
+
+    // req body -> data
+    const { username, password } = req.body;
+    // username or email
+    if (!username || !password) {
+        throw new ApiError(400, "Username and password are required");
+    }
+    //find the user
+    var user = await User.findOne({ $or: [{ userName: username }, { email: username }] });
+    if (!user) {
+        throw new ApiError(404, "User does not exist");
+    }
+    //password check
+    if (!(await user.isPasswordCorrect(password))) {
+        throw new ApiError(401, "Invalid username or password");
+    }
+    //access and referesh token
+    var { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+    //send cookie
+
+    var loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+
+    var cookieOptions = {
+        httpOnly: true,
+        secure: true
+    }
+    return res.status(200).cookie("accessToken", accessToken, cookieOptions).cookie("refreshToken", refreshToken, cookieOptions).json(new ApiResponse(200, {
+        user: loggedInUser, accessToken, refreshToken
+    }, "Login successful"));
+});
+
+const logoutUser = asyncHandler(async (req, res) => {
+    await User.findByIdAndUpdate(req.user._id, {
+        $set: {
+            refreshToken: undefined
+        }
+    }, {
+        new: true
+    });
+    var options = {
+        httpOnly: true,
+        secure: true
+    }
+    return res.status(200).clearCookie("accessToken", options).clearCookie("refreshToken", options).json(new ApiResponse(200, {}, "Logout successful"));
+});
+
+const generateAccessAndRefreshToken = async (userId) => {
+    try {
+        var user = await User.findById(userId);
+        var accessToken = await user.generateAccessToken();
+        var refreshToken = await user.generateRefreshToken();
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave: false });
+        return { accessToken, refreshToken };
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong, please try again later");
+    }
+};
+
+export { registerUser, loginUser, logoutUser };
