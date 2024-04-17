@@ -12,9 +12,9 @@ export { asyncHandler }
 
 /*
 // Another way to implement asyncHandler function
-let asyncHandler = (fun) => async (err, req, res, next) => {
+let asyncHandler = (fun) => async (req, res, next) => {
     try {
-        await fun(err, req, res, next);
+        await fun(req, res, next);
     }
     catch (error) {
         res.status(500).json({ message: error.message, success: false });
