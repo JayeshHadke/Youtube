@@ -213,4 +213,63 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 };
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, updateUserAvatar, updateUserCoverImage };
+const getUserChannelProfile = asyncHandler((req,res) => {
+    const { username } = req.params;
+    if(!user?.trim()){
+        throw new ApiError(404,"User name is missing");
+    }
+    const channel = User.aggregate([
+        {
+            $match : {
+                userName: username
+            }
+        },
+        {
+            $lookup:{
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "channel",
+                as: "subscribers"
+            }
+        },
+        {
+            $lookup : {
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "subscription",
+                as: "subscriptions"
+            
+            }
+        },
+        {
+            $addFields : {
+                subscriberCount: { $size: "$subscribers" },
+                subscriptionCount: { $size: "$subscriptions" },
+                isSubscribed: {
+                    $cond : {
+                        $if : {$in: [req.user?._id, "$subscribers.subscription"]},
+                        $then : true,
+                        $else : false
+                    }
+                }            
+            }
+        },
+        {
+            $project : {
+                fullName : 1,
+                username: 1,
+                subscriberCount  :1,
+                subscriptionCount : 1,
+                email : 1,
+                avatar : 1,
+                coverImage : 1
+            }
+        }
+    ]);
+    if(!channel){
+        throw new ApiError(404,"Channel not found");
+    }
+    res.status(200).json(new ApiResponse(200,channel[0],"Channel Profile"));
+});
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, updateUserAvatar, updateUserCoverImage, getUserChannelProfile };
