@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiErrors.js";
 import { User } from "../models/user.models.js";
-import { uploadOnCloud } from "../utils/cloudinary.js";
+import { uploadOnCloud,deleteFromCloud } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 
@@ -174,11 +174,12 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avator File not found");
     }
+    await deleteFromCloud(req.user.avatar);
     var avatar = await uploadOnCloud(avatarLocalPath);
     if (!avatar) {
         throw new ApiError(400, "Error while uploading avatar");
     }
-    const user = await user.findByIdAndUpdate(req.user?._id, { $set: { avatar: avatar.url } }, { new: true }).select("-password -refreshToken")
+    const user = await User.findByIdAndUpdate(req.user?._id, { $set: { avatar: avatar.url } }, { new: true }).select("-password -refreshToken")
 
     res.status(200).json(new ApiResponse(200, user, "Updated Account"));
 
@@ -189,11 +190,12 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     if (!coverLocalPath) {
         throw new ApiError(400, "Avator File not found");
     }
+    await deleteFromCloud(req.user.coverImage);
     var cover = await uploadOnCloud(coverLocalPath);
     if (!cover) {
         throw new ApiError(400, "Error while uploading Cover");
     }
-    const user = await user.findByIdAndUpdate(req.user?._id, { $set: { coverImage: cover.url } }, { new: true }).select("-password -refreshToken")
+    const user = await User.findByIdAndUpdate(req.user?._id, { $set: { coverImage: cover.url } }, { new: true }).select("-password -refreshToken")
 
     res.status(200).json(new ApiResponse(200, user, "Updated Account"));
 

@@ -20,4 +20,12 @@ const uploadOnCloud = async (localFilePath) => {
     }
 }
 
-export { uploadOnCloud };
+const deleteFromCloud = async (cloudURL) => {
+    try{
+        const publicId = cloudURL.split('/').at(-1).split('.')[0];
+        return cloudinary.uploader.destroy(publicId);
+    } catch(error){
+        return error;
+    }
+}
+export { uploadOnCloud,deleteFromCloud };
